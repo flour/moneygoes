@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using moneygoes.Models;
+using moneygoes.Models.DTOs;
 using moneygoes.Models.ViewModels.Account;
 
 namespace moneygoes.Controllers
@@ -36,7 +37,7 @@ namespace moneygoes.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new { message = string.Join(", ", ModelState.Values) });
+                return BadRequest(new ErrorDto { Data = string.Join(", ", ModelState.Values), ErrorCode = 400 });
             }
             try
             {
@@ -52,7 +53,7 @@ namespace moneygoes.Controllers
                 _logger.LogError(ex, "Login failed");
             }
 
-            return StatusCode(401, new { message = "Could not log in" });
+            return StatusCode(401, new ErrorDto { Data = "Could not log in", ErrorCode = 400 });
         }
 
         [HttpPost("[action]")]
@@ -60,7 +61,7 @@ namespace moneygoes.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new { message = string.Join(", ", ModelState.Values) });
+                return BadRequest(new ErrorDto { Data = string.Join(", ", ModelState.Values), ErrorCode = 400 });
             }
             var user = new AppUser { UserName = model.Email, Email = model.Email };
             try
@@ -72,13 +73,13 @@ namespace moneygoes.Controllers
                     _logger.LogInformation(3, "User created a new account with password.");
                     return Ok('/');
                 }
-                return StatusCode(401, new { message = string.Join(", ", result.Errors.Select(error => error.Description)) });
+                return StatusCode(401, new ErrorDto { Data = string.Join(", ", result.Errors.Select(error => error.Description)), ErrorCode = 401 });
             }
             catch (System.Exception ex)
             {
                 _logger.LogError(ex, "Registration failed");
             }
-            return StatusCode(401, new { message = "Could not register" });
+            return StatusCode(401, new ErrorDto { Data = "Could not register", ErrorCode = 401 });
         }
 
     }
