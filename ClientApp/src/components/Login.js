@@ -1,27 +1,32 @@
 import React, { Component } from 'react';
 import * as axios from 'axios';
-import { API_LOGIN } from '../common/constants';
 
 export class Login extends Component {
-    email;
-    password;
-
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '' };
+        this.state = { email: '', password: '', error: '' };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    tryLogin() {
+    handleChange(event) {
+        this.setState({ [event.target.name]: event.target.value });
+    }
+
+    handleSubmit() {
+        this.state.error = '';
         const data = JSON.stringify({
-            email: '4teste00@mail.com',
-            password: 'HE@E20qwe123'
+            email: this.state.email,
+            password: this.state.password
         });
         axios.post('api/Account/Login', data, { headers: { 'Content-Type': 'application/json' } })
-            .then(function (response) {
+            .then(response => {
                 console.log(response);
             })
-            .catch(function (error) {
+            .catch(error => {
                 console.log(error);
+                this.setState({ error: error.response.data.data });
             });
     }
 
@@ -30,12 +35,20 @@ export class Login extends Component {
             <div>
                 <h1>Login</h1>
                 <form>
-                    <input placeholder="E-mail" value={this.email} />
+                    <input placeholder="E-mail"
+                        name="email"
+                        value={this.state.email}
+                        onChange={this.handleChange} />
                     <br />
-                    <input placeholder="Password" type="password" value={this.password} />
+                    <input placeholder="Password"
+                        type="password"
+                        name="password"
+                        value={this.state.password}
+                        onChange={this.handleChange} />
                     <br />
-                    <button onClick={this.tryLogin} type="button">Login</button>
+                    <input type="button" value="Login" onClick={this.handleSubmit} />
                 </form>
+                <div>{this.state.error}</div>
             </div>
         );
     }

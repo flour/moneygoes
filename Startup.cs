@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
-using AspNetCore.Identity.MongoDbCore.Infrastructure;
-using AspNetCore.Identity.MongoDbCore.Models;
+using AspNetCore.Identity.Mongo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using moneygoes.Models;
+using moneygoes.Models.AppModel;
+using moneygoes.Services;
 
 namespace moneygoes
 {
@@ -38,30 +40,14 @@ namespace moneygoes
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            var userStorageKey = "UserStorage";
-            var mongoSettings = Configuration.GetSection(userStorageKey);
-            MongoDbSettings settings = null;
-            if (mongoSettings == null || mongoSettings.GetChildren().Count() == 0)
-            {
-                settings = new MongoDbSettings
+            var mongoSettings = GetMongoConnection();
+            services.AddSingleton(new Services.MongoRepository(mongoSettings));
+            services.AddIdentityMongoDbProvider<AppUser, AppRole>(options =>
                 {
-                    ConnectionString = Environment.GetEnvironmentVariable("UserStorage.ConnectionString"),
-                    DatabaseName = Environment.GetEnvironmentVariable("UserStorage.DatabaseName")
-                };
-            }
-            else
-            {
-                settings = Configuration.GetSection(userStorageKey).Get<MongoDbSettings>();
-            }
-
-
-            services.AddSingleton<MongoDbSettings>(settings);
-            services.AddIdentity<AppUser, MongoIdentityRole>()
-                    .AddMongoDbStores<AppUser, MongoIdentityRole, Guid>(settings.ConnectionString, settings.DatabaseName)
-                    .AddDefaultTokenProviders();
+                    options.ConnectionString = mongoSettings.ConnectionString;
+                });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -84,7 +70,8 @@ namespace moneygoes
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            app.UseAuthentication();
+            app.UseSpaStaticFiles();            
 
             app.UseMvc(routes =>
             {
@@ -102,6 +89,29 @@ namespace moneygoes
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+        }
+
+        private MongoConnection GetMongoConnection()
+        {
+            var settings = new MongoConnection();
+            settings.ConnectionString = Environment.GetEnvironmentVariable("MONGODB_URI");
+            if (string.IsNullOrWhiteSpace(settings.ConnectionString))
+            {
+                var userStorageKey = "UserStorage";
+                var mongoSettings = Configuration.GetSection(userStorageKey);
+
+                if (mongoSettings != null && mongoSettings.GetChildren().Count() > 0)
+                {
+                    settings.ConnectionString = mongoSettings.GetValue<string>("ConnectionString");
+                }
+                else
+                {
+                    settings.ConnectionString = "mongodb://localhost:27017/";
+                }
+
+            }
+            settings.DatabaseName = settings.ConnectionString.Split('/').LastOrDefault();
+            return settings;
         }
     }
 }

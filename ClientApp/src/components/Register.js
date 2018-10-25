@@ -5,14 +5,22 @@ import { API_REGISTER } from '../common/constants';
 export class Register extends Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '', confirmPassword: '' };
+        this.state = { email: '', password: '', confirmPassword: '', error: '' };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    tryRegister() {
+    handleChange(event) {
+        this.setState({ [event.target.name]: event.target.value });
+    }
+
+    handleSubmit() {
+        this.state.error = API_REGISTER;
         const data = JSON.stringify({
-            email: '4teste00@mail.com',
-            password: 'HE@E20qwe123',
-            confirmPassword: 'HE@E20qwe123'
+            email: this.state.email,
+            password: this.state.password,
+            confirmPassword: this.state.confirmPassword
         });
         axios.post('api/Account/Register', data, { headers: { 'Content-Type': 'application/json' } })
             .then(function (response) {
@@ -20,6 +28,7 @@ export class Register extends Component {
             })
             .catch(function (error) {
                 console.log(error);
+                this.setState({ error: error.response.data.data });
             });
     }
 
@@ -28,14 +37,25 @@ export class Register extends Component {
             <div>
                 <h1>Login</h1>
                 <form>
-                    <input placeholder="E-mail" value={this.state.email} />
+                    <input placeholder="E-mail"
+                        name="email"
+                        value={this.state.email}
+                        onChange={this.handleChange} />
                     <br />
-                    <input placeholder="Password" type="password" value={this.state.password} />
+                    <input placeholder="Password"
+                        type="password" name="password"
+                        value={this.state.password}
+                        onChange={this.handleChange} />
                     <br />
-                    <input placeholder="Confirm password" type="password" value={this.state.confirmPassword} />
+                    <input placeholder="Confirm password"
+                        type="password"
+                        name="confirmPassword"
+                        value={this.state.confirmPassword}
+                        onChange={this.handleChange} />
                     <br />
-                    <button onClick={this.tryRegister} type="button">Register</button>
+                    <button onClick={this.handleSubmit} type="button">Register</button>
                 </form>
+                <div>{this.state.error}</div>
             </div>
         );
     }
