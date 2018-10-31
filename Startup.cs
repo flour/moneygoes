@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
+using System.Text;
 using AspNetCore.Identity.Mongo;
+using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using moneygoes.Models;
 using moneygoes.Models.AppModel;
 using moneygoes.Services;
@@ -25,13 +30,6 @@ namespace moneygoes
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-
-            // if (env.IsDevelopment())
-            // {
-            //     // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
-            //     builder.AddUserSecrets<Startup>();
-            // }
-
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -39,24 +37,21 @@ namespace moneygoes
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             // Add framework services.
             var mongoSettings = GetMongoConnection();
-            services.AddSingleton(new Services.MongoRepository(mongoSettings));
-            services.AddIdentityMongoDbProvider<AppUser, AppRole>(options =>
-                {
-                    options.ConnectionString = mongoSettings.ConnectionString;
-                });
+            services.AddAutoMapper();
 
+            // Identity
+            services.AddIdentityMongoDbProvider<AppUser, AppRole>(options => options.ConnectionString = mongoSettings.ConnectionString);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
-            });
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/build");
+            services.AddSingleton(new Services.MongoRepository(mongoSettings));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -67,11 +62,19 @@ namespace moneygoes
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
+
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
-            app.UseSpaStaticFiles();            
+            app.UseSpaStaticFiles();
 
             app.UseMvc(routes =>
             {

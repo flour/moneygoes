@@ -14,9 +14,20 @@ namespace moneygoes.Models.ViewModels.Account
         [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
+        [Required(ErrorMessage = "Username should be set")]
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
+
+
+        [Required(ErrorMessage = "First name should be set")]
+        [Display(Name = "First name")]
+        [MinLength(2)]
+        [MaxLength(50)]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Last name should be set")]
+        [Display(Name = "Last name")]
+        [MaxLength(50)]
+        public string LastName { get; set; }
     }
 }

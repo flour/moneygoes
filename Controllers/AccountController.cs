@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using moneygoes.Models;
 using moneygoes.Models.DTOs;
 using moneygoes.Models.ViewModels.Account;
+using moneygoes.Services;
 
 namespace moneygoes.Controllers
 {
@@ -16,21 +18,28 @@ namespace moneygoes.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         public AccountController(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
+            IMapper mapper,
             ILoggerFactory loggerFactory
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _mapper = mapper;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
         [HttpGet("[action]")]
-        public IActionResult Test() => Ok();
+        [Authorize]
+        public IActionResult Test()
+        {
+            return Ok("qweqwe");
+        }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
@@ -41,11 +50,11 @@ namespace moneygoes.Controllers
             }
             try
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
-                    return Ok('/');
+                    return Ok(_mapper.Map<AppUserDto>(await _userManager.FindByEmailAsync(model.Email)));
                 }
             }
             catch (System.Exception ex)
@@ -63,7 +72,7 @@ namespace moneygoes.Controllers
             {
                 return BadRequest(new ErrorDto { Data = string.Join(", ", ModelState.Values), ErrorCode = 400 });
             }
-            var user = new AppUser { UserName = model.Email, Email = model.Email };
+            var user = _mapper.Map<AppUser>(model);
             try
             {
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -71,7 +80,7 @@ namespace moneygoes.Controllers
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
-                    return Ok('/');
+                    return Ok(_mapper.Map<AppUserDto>(await _userManager.FindByEmailAsync(model.Email)));
                 }
                 return StatusCode(401, new ErrorDto { Data = string.Join(", ", result.Errors.Select(error => error.Description)), ErrorCode = 401 });
             }

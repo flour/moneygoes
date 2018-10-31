@@ -1,13 +1,15 @@
 ﻿import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom';
 import { Glyphicon, Nav, Navbar, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './NavMenu.css';
 
-export class NavMenu extends Component {
+class NavMenu extends Component {
   displayName = NavMenu.name
 
   render() {
+    const { user } = this.props;
     return (
       <Navbar inverse fixedTop fluid collapseOnSelect>
         <Navbar.Header>
@@ -33,19 +35,47 @@ export class NavMenu extends Component {
                 <Glyphicon glyph='th-list' /> Fetch data
               </NavItem>
             </LinkContainer>
-            <LinkContainer to={'/login'}>
-              <NavItem>
-                <Glyphicon glyph='th-list' /> Login
+            {!user.loggedIn &&
+              <LinkContainer to={'/login'}>
+                <NavItem>
+                  <Glyphicon glyph='th-list' /> Login
+                </NavItem>
+              </LinkContainer>
+            }
+            {!user.loggedIn &&
+              <LinkContainer to={'/register'}>
+                <NavItem>
+                  <Glyphicon glyph='th-list' /> Register
               </NavItem>
-            </LinkContainer>
-            <LinkContainer to={'/register'}>
-              <NavItem>
-                <Glyphicon glyph='th-list' /> Register
-              </NavItem>
-            </LinkContainer>
+              </LinkContainer>
+            }
+            {user.loggedIn &&
+              <LinkContainer to={'/profile'}>
+                <NavItem>
+                  <Glyphicon glyph='th-list' /> Profile
+                </NavItem>
+              </LinkContainer>
+            }
+            {user.loggedIn &&
+              <LinkContainer to={'/logout'}>
+                <NavItem>
+                  <Glyphicon glyph='th-list' /> Logout
+                </NavItem>
+              </LinkContainer>
+            }
           </Nav>
         </Navbar.Collapse>
       </Navbar>
     );
   }
 }
+
+function mapStateToProps(state) {
+  const { user } = state;
+  return {
+    user
+  };
+}
+
+const connectedNavMenu = connect(mapStateToProps)(NavMenu);
+export { connectedNavMenu as NavMenu }; 

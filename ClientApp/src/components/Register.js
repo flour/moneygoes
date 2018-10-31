@@ -1,62 +1,103 @@
-import React, { Component } from 'react';
-import * as axios from 'axios';
-import { API_REGISTER } from '../common/constants';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-export class Register extends Component {
+import { userActions } from '../actions';
+
+class Register extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '', confirmPassword: '', error: '' };
+
+        this.state = {
+            user: { firstName: '', lastName: '', username: '', email: '', password: '' },
+            submitted: false
+        };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(event) {
-        this.setState({ [event.target.name]: event.target.value });
+        const { name, value } = event.target;
+        const { user } = this.state;
+        this.setState({
+            user: {
+                ...user,
+                [name]: value
+            }
+        });
     }
 
-    handleSubmit() {
-        this.state.error = API_REGISTER;
-        const data = JSON.stringify({
-            email: this.state.email,
-            password: this.state.password,
-            confirmPassword: this.state.confirmPassword
-        });
-        axios.post('api/Account/Register', data, { headers: { 'Content-Type': 'application/json' } })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-                this.setState({ error: error.response.data.data });
-            });
+    handleSubmit(event) {
+        event.preventDefault();
+
+        this.setState({ submitted: true });
+        const { user } = this.state;
+        const { dispatch } = this.props;
+        if (user.firstName && user.lastName && user.username && user.email && user.password) {
+            dispatch(userActions.register(user));
+        }
     }
 
     render() {
+        const { registering } = this.props;
+        const { user, submitted } = this.state;
         return (
             <div>
-                <h1>Login</h1>
-                <form>
-                    <input placeholder="E-mail"
-                        name="email"
-                        value={this.state.email}
-                        onChange={this.handleChange} />
-                    <br />
-                    <input placeholder="Password"
-                        type="password" name="password"
-                        value={this.state.password}
-                        onChange={this.handleChange} />
-                    <br />
-                    <input placeholder="Confirm password"
-                        type="password"
-                        name="confirmPassword"
-                        value={this.state.confirmPassword}
-                        onChange={this.handleChange} />
-                    <br />
-                    <button onClick={this.handleSubmit} type="button">Register</button>
+                <h2>Register</h2>
+                <form name="form" onSubmit={this.handleSubmit}>
+                    <div className={'form-group' + (submitted && !user.firstName ? ' has-error' : '')}>
+                        <label htmlFor="firstName">First Name</label>
+                        <input type="text" className="form-control" name="firstName" value={user.firstName} onChange={this.handleChange} />
+                        {submitted && !user.firstName &&
+                            <div className="help-block">First Name is required</div>
+                        }
+                    </div>
+                    <div className={'form-group' + (submitted && !user.lastName ? ' has-error' : '')}>
+                        <label htmlFor="lastName">Last Name</label>
+                        <input type="text" className="form-control" name="lastName" value={user.lastName} onChange={this.handleChange} />
+                        {submitted && !user.lastName &&
+                            <div className="help-block">Last Name is required</div>
+                        }
+                    </div>
+                    <div className={'form-group' + (submitted && !user.username ? ' has-error' : '')}>
+                        <label htmlFor="username">Username</label>
+                        <input type="text" className="form-control" name="username" value={user.username} onChange={this.handleChange} />
+                        {submitted && !user.username &&
+                            <div className="help-block">Username is required</div>
+                        }
+                    </div>
+                    <div className={'form-group' + (submitted && !user.email ? ' has-error' : '')}>
+                        <label htmlFor="email">E-mail</label>
+                        <input type="text" className="form-control" name="email" value={user.email} onChange={this.handleChange} />
+                        {submitted && !user.email &&
+                            <div className="help-block">E-mail is required</div>
+                        }
+                    </div>
+                    <div className={'form-group' + (submitted && !user.password ? ' has-error' : '')}>
+                        <label htmlFor="password">Password</label>
+                        <input type="password" className="form-control" name="password" value={user.password} onChange={this.handleChange} />
+                        {submitted && !user.password &&
+                            <div className="help-block">Password is required</div>
+                        }
+                    </div>
+                    <div className="form-group">
+                        <button className="btn btn-primary">Register</button>
+                        {registering}
+                        <Link to="/login" className="btn btn-link">Cancel</Link>
+                    </div>
                 </form>
-                <div>{this.state.error}</div>
             </div>
         );
     }
 }
+
+function mapStateToProps(state) {
+    const { registering } = state.registration;
+    return {
+        registering
+    };
+}
+
+const connectedRegisterPage = connect(mapStateToProps)(Register);
+export { connectedRegisterPage as Register };

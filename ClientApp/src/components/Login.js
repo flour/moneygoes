@@ -1,55 +1,72 @@
-import React, { Component } from 'react';
-import * as axios from 'axios';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { userActions } from '../actions';
 
-export class Login extends Component {
+class Login extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '', error: '' };
+        this.state = { email: '', password: '', submitted: false };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(event) {
-        this.setState({ [event.target.name]: event.target.value });
+        const { name, value } = event.target;
+        this.setState({ [name]: value });
     }
 
-    handleSubmit() {
-        this.state.error = '';
-        const data = JSON.stringify({
-            email: this.state.email,
-            password: this.state.password
-        });
-        axios.post('api/Account/Login', data, { headers: { 'Content-Type': 'application/json' } })
-            .then(response => {
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-                this.setState({ error: error.response.data.data });
-            });
+    handleSubmit(event) {
+        event.preventDefault();
+
+        this.setState({ submitted: true });
+        const { username, password } = this.state;
+        const { dispatch } = this.props;
+        if (username && password) {
+            dispatch(userActions.login(username, password));
+        }
     }
 
     render() {
+        const { loggingIn } = this.props;
+        const { username, password, submitted } = this.state;
+
         return (
             <div>
                 <h1>Login</h1>
-                <form>
-                    <input placeholder="E-mail"
-                        name="email"
-                        value={this.state.email}
-                        onChange={this.handleChange} />
-                    <br />
-                    <input placeholder="Password"
-                        type="password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={this.handleChange} />
-                    <br />
-                    <input type="button" value="Login" onClick={this.handleSubmit} />
+                <form name="form" onSubmit={this.handleSubmit}>
+                    <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
+                        <label htmlFor="username">Username</label>
+                        <input type="text" className="form-control" name="username" value={username} onChange={this.handleChange} />
+                        {submitted && !username &&
+                            <div className="help-block">Username is required</div>
+                        }
+                    </div>
+                    <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
+                        <label htmlFor="password">Password</label>
+                        <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} />
+                        {submitted && !password &&
+                            <div className="help-block">Password is required</div>
+                        }
+                    </div>
+                    <div className="form-group">
+                        <button className="btn btn-primary">Login</button>
+                        {loggingIn}
+                        <Link to="/register" className="btn btn-link">Register</Link>
+                    </div>
                 </form>
-                <div>{this.state.error}</div>
             </div>
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    const { loggingIn } = state.authentication;
+    return {
+        loggingIn
+    };
+}
+
+const connectedLoginPage = connect(mapStateToProps)(Login);
+export { connectedLoginPage as Login }; 
