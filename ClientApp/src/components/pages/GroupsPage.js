@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as axios from 'axios';
 
-export class PaymentGroup extends Component {
+export class GroupsPage extends Component {
     state = { name: '', description: '' }
 
     render() {

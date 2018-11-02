@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { userActions } from '../actions';
+import { userActions } from '../../actions';
 
-class Login extends React.Component {
+class LoginPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = { email: '', password: '', submitted: false };
@@ -37,7 +37,7 @@ class Login extends React.Component {
                 <h1>Login</h1>
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">Username/E-mail</label>
                         <input type="text" className="form-control" name="username" value={username} onChange={this.handleChange} />
                         {submitted && !username &&
                             <div className="help-block">Username is required</div>
@@ -62,11 +62,11 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    const { loggingIn } = state.authentication;
+    const { loggingIn } = state.user;
     return {
         loggingIn
     };
 }
 
-const connectedLoginPage = connect(mapStateToProps)(Login);
-export { connectedLoginPage as Login }; 
+const connectedLoginPage = connect(mapStateToProps)(LoginPage);
+export { connectedLoginPage as LoginPage }; 

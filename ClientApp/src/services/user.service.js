@@ -1,4 +1,4 @@
-import { authHeader, config } from '../common';
+import { authHeader, prepareHeaders, handleResponse, handleError, config } from '../common';
 
 export const userService = {
     login,
@@ -7,97 +7,109 @@ export const userService = {
     getAll,
     getById,
     update,
-    delete: _delete
+    delete: remove
 };
 
-function login(username, password) {
+const login = async (username, password) => {
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: prepareHeaders(false, true),
         body: JSON.stringify({ username, password, email: username })
     };
-
-    return fetch(config.loginUrl, requestOptions)
-        .then(handleResponse, handleError)
-        .then(user => {
-            if (user) {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes        
-                localStorage.setItem('user', JSON.stringify(user));
-            }
-            return user;
-        });
+    let user;
+    try {
+        const response = await fetch(config.loginUrl, requestOptions);
+        user = await handleResponse(response);
+    }
+    catch (error) {
+        return handleError(error);
+    }
+    if (user) {
+        // store user details and jwt token in local storage to keep user logged in between page refreshes        
+        localStorage.setItem('user', JSON.stringify(user));
+    }
+    return user;
 }
 
-function logout() {
+const logout = async () => {
     // remove user from local storage to log user out
+
     localStorage.removeItem('user');
 }
 
-function getAll() {
+const getAll = async () => {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
 
-    return fetch(config.apiUrl + '/users', requestOptions).then(handleResponse, handleError);
+    try {
+        const response = await fetch(config.apiUrl + '/users', requestOptions);
+        return handleResponse(response);
+    }
+    catch (error) {
+        return handleError(error);
+    }
 }
 
-function getById(id) {
+const getById = async (id) => {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
 
-    return fetch(config.apiUrl + '/users/' + id, requestOptions).then(handleResponse, handleError);
+    try {
+        const response = await fetch(config.apiUrl + '/users/' + id, requestOptions);
+        return handleResponse(response);
+    }
+    catch (error) {
+        return handleError(error);
+    }
 }
 
-function register(user) {
+const register = async (user) => {
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: prepareHeaders(false, true),
         body: JSON.stringify(user)
     };
 
-    return fetch(config.registerUrl, requestOptions).then(handleResponse, handleError);
+    try {
+        const response = await fetch(config.registerUrl, requestOptions);
+        return handleResponse(response);
+    }
+    catch (error) {
+        return handleError(error);
+    }
 }
 
-function update(user) {
+const update = async (user) => {
     const requestOptions = {
         method: 'PUT',
-        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        headers: prepareHeaders(true, true),
         body: JSON.stringify(user)
     };
 
-    return fetch(config.apiUrl + '/users/' + user.id, requestOptions).then(handleResponse, handleError);
+    try {
+        const response = await fetch(config.apiUrl + '/users/' + user.id, requestOptions);
+        return handleResponse(response);
+    }
+    catch (error) {
+        return handleError(error);
+    }
 }
 
-// prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id) {
+const remove = async (id) => {
     const requestOptions = {
         method: 'DELETE',
-        headers: authHeader()
+        headers: prepareHeaders(true, true)
     };
 
-    return fetch(config.apiUrl + '/users/' + id, requestOptions).then(handleResponse, handleError);
-}
-
-function handleResponse(response) {
-    return new Promise((resolve, reject) => {
-        if (response.ok) {
-            // return json if it was returned in the response
-            var contentType = response.headers.get("content-type");
-            if (contentType && contentType.includes("application/json")) {
-                response.json().then(json => resolve(json));
-            } else {
-                resolve();
-            }
-        } else {
-            // return error message from response body
-            response.text().then(text => reject(text));
-        }
-    });
-}
-
-function handleError(error) {
-    return Promise.reject(error && error.message);
+    try {
+        const response = await fetch(config.apiUrl + '/users/' + id, requestOptions);
+        return handleResponse(response);
+    }
+    catch (error) {
+        return handleError(error);
+    }
 }
