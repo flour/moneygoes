@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import { Glyphicon, Nav, Navbar, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './NavMenu.css';
+import { userActions } from '../../../actions';
 
-const NavMenu = ({ user }) => (
+const NavMenu = ({ user, dispatch }) => (
   <Navbar inverse fixedTop fluid collapseOnSelect>
     <Navbar.Header>
       <Navbar.Brand>
@@ -18,49 +19,47 @@ const NavMenu = ({ user }) => (
         <LinkContainer to={'/'} exact>
           <NavItem>
             <Glyphicon glyph='home' /> Home
-              </NavItem>
+          </NavItem>
         </LinkContainer>
-        {user.loggedIn &&
+        {user.user &&
           <LinkContainer to={'/counter'}>
             <NavItem>
               <Glyphicon glyph='education' /> Counter
-                </NavItem>
+            </NavItem>
           </LinkContainer>
         }
-        {user.loggedIn &&
-          <LinkContainer to={'/fetchdata'}>
+        {user.user &&
+          <LinkContainer to={'/data'}>
             <NavItem>
               <Glyphicon glyph='th-list' /> Fetch data
-                </NavItem>
+            </NavItem>
           </LinkContainer>
         }
-        {!user.loggedIn &&
+        {!user.user &&
           <LinkContainer to={'/login'}>
             <NavItem>
               <Glyphicon glyph='log-in' /> Login
-                </NavItem>
+            </NavItem>  
           </LinkContainer>
         }
-        {!user.loggedIn &&
+        {!user.user &&
           <LinkContainer to={'/register'}>
             <NavItem>
               <Glyphicon glyph='th-list' /> Register
-              </NavItem>
+            </NavItem>
           </LinkContainer>
         }
-        {user.loggedIn &&
+        {user.user &&
           <LinkContainer to={'/profile'}>
             <NavItem>
               <Glyphicon glyph='user' /> Profile
-                </NavItem>
+            </NavItem>
           </LinkContainer>
         }
-        {user.loggedIn &&
-          <LinkContainer to={'/logout'}>
-            <NavItem>
-              <Glyphicon glyph='log-out' /> Logout
-                </NavItem>
-          </LinkContainer>
+        {user.user &&
+          <NavItem onClick={() => dispatch(userActions.logout())}>
+            <Glyphicon glyph='log-out' /> Logout
+          </NavItem>
         }
       </Nav>
     </Navbar.Collapse>
@@ -68,9 +67,10 @@ const NavMenu = ({ user }) => (
 );
 
 function mapStateToProps(state) {
-  const { user } = state;
+  const { user, dispatch } = state;
   return {
-    user
+    user,
+    dispatch
   };
 }
 

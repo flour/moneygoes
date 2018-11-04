@@ -25,7 +25,6 @@ class App extends React.Component {
     super(props);
     const { dispatch } = this.props;
     history.listen((location, action) => {
-      // clear alert on location change
       dispatch(alertActions.clear());
     });
   }
@@ -43,6 +42,7 @@ class App extends React.Component {
             <Route path="/login" component={LoginPage} />
             <Route path="/register" component={RegisterPage} />
             <Route path="/profile" component={ProfilePage} />
+            <Route path="/data" component={GroupsPage} />
           </Layout>
         </Router>
       </div>

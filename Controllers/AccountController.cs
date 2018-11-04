@@ -34,11 +34,20 @@ namespace moneygoes.Controllers
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
-        [HttpGet("[action]")]
+        [HttpPost("[action]")]
         [Authorize]
-        public IActionResult Test()
+        public async Task<IActionResult> Logout()
         {
-            return Ok("qweqwe");
+            try
+            {
+                await _signInManager.SignOutAsync();
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Could not sign out");
+                return StatusCode(500, new ErrorDto { Data = "Could not sign out", ErrorCode = 500 });
+            }
+            return NoContent();
         }
 
         [HttpPost("[action]")]

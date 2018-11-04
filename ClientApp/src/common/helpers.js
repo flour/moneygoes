@@ -34,5 +34,6 @@ export const handleResponse = (response) => {
 }
 
 export const handleError = (error) => {
+    console.log(error.message);
     return Promise.reject(error && error.message);
 }

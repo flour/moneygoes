@@ -4,17 +4,19 @@ import { userConstants } from '../constants';
 const ACTION_HANDLERS = {
   [userConstants.LOGIN_REQUEST]: (state, action) => ({
     ...state,
-    user: action.payload
+    user: action.user
   }),
   [userConstants.LOGIN_SUCCESS]: (state, action) => ({
     ...state,
-    user: action.payload
+    user: action.user
   }),
   [userConstants.LOGIN_FAILURE]: (state, action) => ({
-    ...state
+    ...state,
+    user: {}
   }),
   [userConstants.LOGOUT]: (state, action) => ({
-    ...state
+    ...state,
+    user: action.user
   }),
 };
 
