@@ -2,7 +2,7 @@ import { alertState } from '../common/appState';
 import { alertConstants } from '../constants';
 
 const ACTION_HANDLERS = {
-  [alertConstants.SUCCESS]: (state, action) => ({
+  [alertConstants.OK]: (state, action) => ({
     ...state,
     alert: {
       type: 'alert-success',

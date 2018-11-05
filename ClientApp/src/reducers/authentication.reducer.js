@@ -2,15 +2,15 @@ import { userState } from '../common/appState';
 import { userConstants } from '../constants';
 
 const ACTION_HANDLERS = {
-  [userConstants.LOGIN_REQUEST]: (state, action) => ({
+  [userConstants.LOGIN_REQ]: (state, action) => ({
     ...state,
     user: action.user
   }),
-  [userConstants.LOGIN_SUCCESS]: (state, action) => ({
+  [userConstants.LOGIN_OK]: (state, action) => ({
     ...state,
     user: action.user
   }),
-  [userConstants.LOGIN_FAILURE]: (state, action) => ({
+  [userConstants.LOGIN_FAIL]: (state, action) => ({
     ...state,
     user: {}
   }),

@@ -3,7 +3,7 @@ const ERROR = 'ERROR';
 const CLEAR = 'ALERT_CLEAR';
 
 export const alertConstants = {
-    SUCCESS,
+    OK,
     ERROR,
     CLEAR
 }

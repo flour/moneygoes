@@ -2,15 +2,15 @@ import { registrationState } from '../common/appState';
 import { userConstants } from '../constants';
 
 const ACTION_HANDLERS = {
-    [userConstants.REGISTER_REQUEST]: (state, action) => ({
+    [userConstants.REGISTER_REQ]: (state, action) => ({
         ...state,
         registration: { registering: true }
     }),
-    [userConstants.REGISTER_SUCCESS]: (state, action) => ({
+    [userConstants.REGISTER_OK]: (state, action) => ({
         ...state,
         registration: {}
     }),
-    [userConstants.REGISTER_FAILURE]: (state, action) => ({
+    [userConstants.REGISTER_FAIL]: (state, action) => ({
         ...state,
         registration: {}
     })

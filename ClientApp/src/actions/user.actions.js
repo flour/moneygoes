@@ -20,9 +20,9 @@ const login = (username, password) => {
             );
     };
 
-    function request(user) { return { type: userConstants.LOGIN_REQUEST, user } }
-    function success(user) { return { type: userConstants.LOGIN_SUCCESS, user } }
-    function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }
+    function request(user) { return { type: userConstants.LOGIN_REQ, user } }
+    function success(user) { return { type: userConstants.LOGIN_OK, user } }
+    function failure(error) { return { type: userConstants.LOGIN_FAIL, error } }
 }
 
 const logout = () => {
