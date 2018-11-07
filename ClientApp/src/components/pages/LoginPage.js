@@ -6,8 +6,7 @@ import { userActions } from '../../actions';
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '', submitted: false };
-
+        this.state = { username: '', password: '', submitted: false };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }

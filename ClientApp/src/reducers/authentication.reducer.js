@@ -16,7 +16,7 @@ const ACTION_HANDLERS = {
   }),
   [userConstants.LOGOUT]: (state, action) => ({
     ...state,
-    user: action.user
+    user: {}
   }),
 };
 

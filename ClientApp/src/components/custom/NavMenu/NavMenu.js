@@ -31,7 +31,7 @@ const NavMenu = ({ user, dispatch }) => (
         {user.user &&
           <LinkContainer to={'/data'}>
             <NavItem>
-              <Glyphicon glyph='th-list' /> Fetch data
+              <Glyphicon glyph='th-list' /> Payments
             </NavItem>
           </LinkContainer>
         }

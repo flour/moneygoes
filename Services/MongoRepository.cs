@@ -35,6 +35,12 @@ namespace moneygoes.Services
             return await result.SingleOrDefaultAsync();
         }
 
+        public async Task<T> Single<T>(string fieldName, string value) where T : class, new()
+        {
+            var result = await _db.GetCollection<T>(GetTypeName(typeof(T))).FindAsync(Builders<T>.Filter.Eq(fieldName, value));
+            return await result.SingleOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<T>> All<T>() where T : class, new()
             => await (await _db.GetCollection<T>(GetTypeName(typeof(T))).FindAsync(Builders<T>.Filter.Empty)).ToListAsync();
 
