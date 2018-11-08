@@ -16,7 +16,7 @@ namespace moneygoes.Models.ViewModels.Account
 
         [Required(ErrorMessage = "Username should be set")]
         [Display(Name = "Username")]
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
 
         [Required(ErrorMessage = "First name should be set")]

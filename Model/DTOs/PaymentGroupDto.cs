@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace moneygoes.Models.DTOs
 {
-    public class PaymentsGroupDto
+    public class PaymentGroupDto
     {
         public string Id { get; set; }
         public string Name { get; set; }

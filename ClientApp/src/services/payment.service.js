@@ -1,7 +1,7 @@
 import { prepareHeaders, handleResponse, handleError, config } from '../common';
 
 export const paymentService = {
-    getAllgroups: async () => {
+    getAllGroups: async () => {
         const requestOptions = { method: 'GET', headers: prepareHeaders(true, true) };
         try {
             const response = await fetch(config.paymentsUrl, requestOptions);
@@ -12,7 +12,8 @@ export const paymentService = {
             return data;
         }
         catch (error) {
-            return handleError(error);
+            handleError(error);
+            throw error;
         }
     },
     createGroup: async (name, description) => {
@@ -31,7 +32,8 @@ export const paymentService = {
             }
             return data;
         } catch (error) {
-            return handleError(error);
+            handleError(error);
+            throw error;
         }
     }
 }

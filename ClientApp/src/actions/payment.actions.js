@@ -2,10 +2,10 @@ import { paymentConstants } from '../constants';
 import { paymentService } from '../services';
 import { alertActions } from './';
 
-const getAllgroups = () => {
+const getAllGroups = () => {
     return async dispatch => {
         try {
-            const data = await paymentService.getAllgroups();
+            const data = await paymentService.getAllGroups();
             dispatch(success(data));
         } catch (error) {
             dispatch(failure(error));
@@ -32,6 +32,6 @@ const createGroup = (name, description) => {
 }
 
 export const paymentActions = {
-    getAllgroups,
+    getAllGroups,
     createGroup
 };

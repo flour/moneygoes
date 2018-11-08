@@ -2,14 +2,8 @@ import { paymentConstants } from '../constants';
 import { paymentState } from '../common/appState';
 
 const ACTION_HANDLERS = {
-    [paymentConstants.GROUP_ALL_REQ_OK]: (state, action) => ({
-        ...state,
-        groups: action.data
-    }),
-    [paymentConstants.GROUP_CREATE_REQ_OK]: (state, action) => ({
-        ...state,
-        groups: [action.data, ...(state.groups || [])]
-    }),
+    [paymentConstants.GROUP_ALL_REQ_OK]: (state, action) => ([...action.data]),
+    [paymentConstants.GROUP_CREATE_REQ_OK]: (state, action) => ([...(state || [])]),
 }
 
 export const payments = (state = paymentState, action) => {

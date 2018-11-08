@@ -5,10 +5,11 @@ import { paymentActions, alertActions } from '../../actions';
 class GroupsPage extends React.Component {
     constructor(props) {
         super(props);
-        const { payments } = this.props;
+        const { payments, dispatch } = this.props;
         this.state = { payments, name: '', description: '', submitted: false };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        dispatch(paymentActions.getAllGroups())
     }
 
     handleChange(event) {
@@ -44,9 +45,8 @@ class GroupsPage extends React.Component {
                     </div>
                     <button className="btn btn-primary">Add</button>
                 </form>
-
-                {payments.map((group, i) => {
-                    return <div>{group}</div>;
+                {payments.map((payment, i) => {
+                    return <div key={`group_${i}`}>{payment.name}</div>
                 })}
             </div>
         );

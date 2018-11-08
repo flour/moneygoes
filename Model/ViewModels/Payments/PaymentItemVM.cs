@@ -1,10 +1,7 @@
-using System;
-
-namespace moneygoes.Models.DTOs
+namespace moneygoes.Models.ViewModels.Payments
 {
-    public class PaymentItemDto
+    public class PaymentItemVM
     {
-        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
@@ -12,6 +9,5 @@ namespace moneygoes.Models.DTOs
         public bool Income { get; set; }
         public bool IsPlanned { get; set; }
         public bool Desired { get; set; }
-        public DateTime Created { get; set; }
     }
 }

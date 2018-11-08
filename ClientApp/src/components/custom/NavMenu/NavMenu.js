@@ -5,6 +5,7 @@ import { Glyphicon, Nav, Navbar, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './NavMenu.css';
 import { userActions } from '../../../actions';
+import { history } from '../../../common';
 
 const NavMenu = ({ user, dispatch }) => (
   <Navbar inverse fixedTop fluid collapseOnSelect>
@@ -21,43 +22,46 @@ const NavMenu = ({ user, dispatch }) => (
             <Glyphicon glyph='home' /> Home
           </NavItem>
         </LinkContainer>
-        {user.user &&
+        {user.username &&
           <LinkContainer to={'/counter'}>
             <NavItem>
               <Glyphicon glyph='education' /> Counter
             </NavItem>
           </LinkContainer>
         }
-        {user.user &&
+        {user.username &&
           <LinkContainer to={'/data'}>
             <NavItem>
               <Glyphicon glyph='th-list' /> Payments
             </NavItem>
           </LinkContainer>
         }
-        {!user.user &&
+        {!user.username &&
           <LinkContainer to={'/login'}>
             <NavItem>
               <Glyphicon glyph='log-in' /> Login
-            </NavItem>  
+            </NavItem>
           </LinkContainer>
         }
-        {!user.user &&
+        {!user.username &&
           <LinkContainer to={'/register'}>
             <NavItem>
               <Glyphicon glyph='th-list' /> Register
             </NavItem>
           </LinkContainer>
         }
-        {user.user &&
+        {user.username &&
           <LinkContainer to={'/profile'}>
             <NavItem>
               <Glyphicon glyph='user' /> Profile
             </NavItem>
           </LinkContainer>
         }
-        {user.user &&
-          <NavItem onClick={() => dispatch(userActions.logout())}>
+        {user.username &&
+          <NavItem onClick={() => {
+            dispatch(userActions.logout());
+            history.push('login');
+          }}>
             <Glyphicon glyph='log-out' /> Logout
           </NavItem>
         }

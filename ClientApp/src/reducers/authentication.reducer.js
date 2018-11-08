@@ -3,21 +3,13 @@ import { userConstants } from '../constants';
 
 const ACTION_HANDLERS = {
   [userConstants.LOGIN_REQ]: (state, action) => ({
-    ...state,
-    user: action.user
+    ...action.user
   }),
   [userConstants.LOGIN_OK]: (state, action) => ({
-    ...state,
-    user: action.user
+    ...action.user
   }),
-  [userConstants.LOGIN_FAIL]: (state, action) => ({
-    ...state,
-    user: {}
-  }),
-  [userConstants.LOGOUT]: (state, action) => ({
-    ...state,
-    user: {}
-  }),
+  [userConstants.LOGIN_FAIL]: (state, action) => ({}),
+  [userConstants.LOGOUT]: (state, action) => ({}),
 };
 
 export const user = (state = userState, action) => {

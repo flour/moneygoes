@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace moneygoes.Models
 {
-    public class PaymentGroup : BsonDocument
+    public class PaymentGroup
     {
         [BsonId]
         public string Id { get; set; }
@@ -13,6 +13,6 @@ namespace moneygoes.Models
         public string Description { get; set; }
         public string UserId { get; set; }
         public List<PaymentItem> Items { get; set; } = new List<PaymentItem>();
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.Now;
     }
 }

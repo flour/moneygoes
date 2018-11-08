@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using moneygoes.Models;
 using moneygoes.Models.DTOs;
 using moneygoes.Models.ViewModels;
+using moneygoes.Models.ViewModels.Payments;
 using moneygoes.Services;
 
 namespace moneygoes.Controllers
@@ -22,12 +23,12 @@ namespace moneygoes.Controllers
         private readonly IMapper _mapper;
 
         private readonly ILogger _logger;
-        public PaymentsController(UserManager<AppUser> userManager, MongoRepository repository, IMapper mapper, ILogger logger)
+        public PaymentsController(UserManager<AppUser> userManager, MongoRepository repository, IMapper mapper, ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
             _repository = repository;
             _mapper = mapper;
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger<PaymentsController>(); ;
         }
 
         [HttpGet("[action]")]
@@ -36,7 +37,7 @@ namespace moneygoes.Controllers
             try
             {
                 var allGroups = await _repository.All<PaymentGroup>();
-                var result = _mapper.Map<IEnumerable<PaymentsGroupDto>>(allGroups);
+                var result = _mapper.Map<IEnumerable<PaymentGroupDto>>(allGroups);
                 return Ok(result);
             }
             catch (System.Exception ex)
@@ -47,7 +48,7 @@ namespace moneygoes.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetOne(string id)
         {
             try
@@ -75,8 +76,8 @@ namespace moneygoes.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 var entity = _mapper.Map<PaymentGroup>(data);
                 entity.UserId = user.Id;
-                await _repository.Add(data);
-                var newOne = _mapper.Map<PaymentsGroupDto>(await _repository.Single<PaymentGroup>("Name", data.Name));
+                await _repository.Add(entity);
+                var newOne = _mapper.Map<PaymentGroupDto>(entity);
                 return Created($"api/payments/{newOne.Id}", newOne);
             }
             catch (System.Exception ex)

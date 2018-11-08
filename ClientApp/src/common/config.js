@@ -3,5 +3,5 @@ export const config = {
     loginUrl: 'api/account/login',
     logoutUrl: 'api/account/logout',
     registerUrl: 'api/account/register',
-    paymentsUrl: 'api/payments',
+    paymentsUrl: 'api/payments/getAll',
 };

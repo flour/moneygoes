@@ -3,22 +3,18 @@ import { alertConstants } from '../constants';
 
 const ACTION_HANDLERS = {
   [alertConstants.OK]: (state, action) => ({
-    ...state,
-    alert: {
+    ...{
       type: 'alert-success',
       message: action.message
     }
   }),
   [alertConstants.ERROR]: (state, action) => ({
-    ...state,
-    alert: {
+    ...{
       type: 'alert-danger',
       message: action.message
     }
   }),
-  [alertConstants.CLEAR]: (state, action) => ({
-    ...state
-  }),
+  [alertConstants.CLEAR]: (state, action) => ({}),
 };
 
 export const alert = (state = alertState, action) => {
