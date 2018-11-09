@@ -1,8 +1,8 @@
-using AspNetCore.Identity.Mongo.Model;
+using Microsoft.AspNetCore.Identity;
 
 namespace moneygoes.Models
 {
-    public class AppUser : MongoUser
+    public class AppUser : IdentityUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

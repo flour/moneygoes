@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace moneygoes.Models.ViewModels.Account
+namespace moneygoes.Models.ViewModels
 {
-    public class RegisterViewModel
+    public class RegistrationVM : IViewModel
     {
         [Required(ErrorMessage = "Email should be set")]
         [EmailAddress]

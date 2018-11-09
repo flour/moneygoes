@@ -15,12 +15,12 @@ const login = (username, password) => {
                 },
                 error => {
                     dispatch(failure(error));
-                    dispatch(alertActions.error(error));
+                    dispatch(alertActions.error('Could not login'));
                 }
             );
     };
 
-    function request(user) { return { type: userConstants.LOGIN_REQ, user } }
+    function request(login) { return { type: userConstants.LOGIN_REQ, login } }
     function success(user) { return { type: userConstants.LOGIN_OK, user } }
     function failure(error) { return { type: userConstants.LOGIN_FAIL, error } }
 }
@@ -30,11 +30,10 @@ const logout = () => {
     return { type: userConstants.LOGOUT };
 }
 
-const register = (user) => {
+const register = (registration) => {
     return dispatch => {
-        dispatch(request(user));
-
-        userService.register(user)
+        dispatch(request(registration));
+        userService.register(registration)
             .then(
                 () => {
                     dispatch(success());
@@ -48,9 +47,9 @@ const register = (user) => {
             );
     };
 
-    function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
-    function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
-    function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
+    function request(registration) { return { type: userConstants.REGISTER_REQ, registration } }
+    function success(registration) { return { type: userConstants.REGISTER_OK, registration } }
+    function failure(error) { return { type: userConstants.REGISTER_FAIL, error } }
 }
 
 export const userActions = {

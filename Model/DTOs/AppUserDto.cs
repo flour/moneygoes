@@ -1,8 +1,7 @@
 namespace moneygoes.Models.DTOs
 {
-    public class AppUserDto
+    public class AppUserDto : BaseDto
     {
-        public string Id { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
 

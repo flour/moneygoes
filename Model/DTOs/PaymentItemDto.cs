@@ -2,9 +2,8 @@ using System;
 
 namespace moneygoes.Models.DTOs
 {
-    public class PaymentItemDto
+    public class PaymentItemDto : BaseDto
     {
-        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }

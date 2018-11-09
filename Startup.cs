@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Text;
-using AspNetCore.Identity.Mongo;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -11,13 +10,14 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using moneygoes.Models;
-using moneygoes.Models.AppModel;
 using moneygoes.Services;
+using moneygoes.Services.DB;
 
 namespace moneygoes
 {
@@ -37,17 +37,20 @@ namespace moneygoes
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            var connString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING");
+            connString = string.IsNullOrWhiteSpace(connString) ? Configuration["DB:MySQL:ConnectionString"] : connString;
 
-            // Add framework services.
-            var mongoSettings = GetMongoConnection();
+            services.AddCors();
             services.AddAutoMapper();
 
-            // Identity
-            services.AddIdentityMongoDbProvider<AppUser, AppRole>(options => options.ConnectionString = mongoSettings.ConnectionString);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/build");
-            services.AddSingleton(new Services.MongoRepository(mongoSettings));
+            services.AddDbContextPool<MoneyGoesContext>(options => options.UseMySql(connString));
+            services.AddIdentity<AppUser, IdentityRole>()
+                .AddEntityFrameworkStores<MoneyGoesContext>()
+                .AddDefaultTokenProviders();
+
+            AddRepositories(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,27 +97,9 @@ namespace moneygoes
             });
         }
 
-        private MongoConnection GetMongoConnection()
+        private void AddRepositories(IServiceCollection services)
         {
-            var settings = new MongoConnection();
-            settings.ConnectionString = Environment.GetEnvironmentVariable("MONGODB_URI");
-            if (string.IsNullOrWhiteSpace(settings.ConnectionString))
-            {
-                var userStorageKey = "UserStorage";
-                var mongoSettings = Configuration.GetSection(userStorageKey);
-
-                if (mongoSettings != null && mongoSettings.GetChildren().Count() > 0)
-                {
-                    settings.ConnectionString = mongoSettings.GetValue<string>("ConnectionString");
-                }
-                else
-                {
-                    settings.ConnectionString = "mongodb://localhost:27017/";
-                }
-
-            }
-            settings.DatabaseName = settings.ConnectionString.Split('/').LastOrDefault();
-            return settings;
+            services.AddScoped<IPaymentGroupRepo, PaymentGroupRepo>();
         }
     }
 }

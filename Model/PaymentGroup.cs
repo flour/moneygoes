@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
 namespace moneygoes.Models
 {
-    public class PaymentGroup
+    public class PaymentGroup : BaseEntity
     {
-        [BsonId]
-        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string UserId { get; set; }

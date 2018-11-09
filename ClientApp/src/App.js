@@ -7,7 +7,7 @@ import { alertActions } from './actions';
 
 import {
   PrivateRoute,
-  Layout,  
+  Layout,
 } from './components';
 
 import {
@@ -33,11 +33,8 @@ class App extends React.Component {
     const { alert } = this.props;
     return (
       <div className="col-sm-8 col-sm-offset-2">
-        {alert.message &&
-          <div className={`alert ${alert.type}`}>{alert.message}</div>
-        }
         <Router history={history}>
-          <Layout>  
+          <Layout alert={alert}>
             <PrivateRoute exact path="/" component={HomePage} />
             <Route path="/login" component={LoginPage} />
             <Route path="/register" component={RegisterPage} />

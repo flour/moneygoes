@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using moneygoes.Models;
 using moneygoes.Models.DTOs;
+using moneygoes.Models.ViewModels;
 using moneygoes.Models.ViewModels.Account;
 using moneygoes.Services;
 
@@ -51,7 +52,7 @@ namespace moneygoes.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        public async Task<IActionResult> Login([FromBody] LoginVM model)
         {
             if (!ModelState.IsValid)
             {
@@ -75,7 +76,7 @@ namespace moneygoes.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+        public async Task<IActionResult> Register([FromBody] RegistrationVM model)
         {
             if (!ModelState.IsValid)
             {

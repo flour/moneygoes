@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace moneygoes.Models.ViewModels.Account
 {
-    public class LoginViewModel
+    public class LoginVM : IViewModel
     {
         [Required(ErrorMessage = "Email should be set")]
         [EmailAddress]

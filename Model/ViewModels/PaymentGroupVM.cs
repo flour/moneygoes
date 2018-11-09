@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace moneygoes.Models.ViewModels.Payments
+namespace moneygoes.Models.ViewModels
 {
-    public class PaymentGroupVM
+    public class PaymentGroupVM : IViewModel
     {
         [Required]
         public string Name { get; set; }

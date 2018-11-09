@@ -14,7 +14,7 @@
 # COPY --from=build /app/out ./
 # ENTRYPOINT ["dotnet", "moneygoes.dll"]
 
-FROM microsoft/dotnet:2.1-sdk AS build
+FROM microsoft/dotnet:2.1-sdk-alpine AS build
 WORKDIR /app
 COPY . .
 CMD ASPNETCORE_URLS=http://*:$PORT dotnet moneygoes.dll

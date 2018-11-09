@@ -1,6 +1,6 @@
-namespace moneygoes.Models.ViewModels.Payments
+namespace moneygoes.Models.ViewModels
 {
-    public class PaymentItemVM
+    public class PaymentItemVM : IViewModel
     {
         public string Name { get; set; }
         public string Description { get; set; }
