@@ -9,7 +9,7 @@ using moneygoes.Services;
 namespace moneygoes.Migrations
 {
     [DbContext(typeof(MoneyGoesContext))]
-    [Migration("20181109132936_init")]
+    [Migration("20181116073044_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,6 +161,8 @@ namespace moneygoes.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<int?>("PurchasingGroupID");
+
                     b.Property<string>("SecurityStamp");
 
                     b.Property<string>("Token");
@@ -179,28 +181,35 @@ namespace moneygoes.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex");
 
+                    b.HasIndex("PurchasingGroupID");
+
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("moneygoes.Models.PaymentGroup", b =>
+            modelBuilder.Entity("moneygoes.Models.Comment", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("Created");
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Text");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Theme")
+                        .HasMaxLength(255);
 
-                    b.Property<string>("UserId");
+                    b.Property<int>("UserId");
+
+                    b.Property<string>("UserId1");
 
                     b.HasKey("ID");
 
-                    b.ToTable("Groups");
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("moneygoes.Models.PaymentItem", b =>
+            modelBuilder.Entity("moneygoes.Models.Purchase", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
@@ -211,7 +220,7 @@ namespace moneygoes.Migrations
 
                     b.Property<bool>("Desired");
 
-                    b.Property<int>("GroupId");
+                    b.Property<int?>("GroupID");
 
                     b.Property<string>("ImageUrl");
 
@@ -221,13 +230,53 @@ namespace moneygoes.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int>("PurchaseObjectId");
+
                     b.Property<decimal>("Value");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("GroupID");
 
-                    b.ToTable("Items");
+                    b.HasIndex("PurchaseObjectId");
+
+                    b.ToTable("Purchases");
+                });
+
+            modelBuilder.Entity("moneygoes.Models.PurchaseObject", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("ImageUrl");
+
+                    b.Property<string>("Name");
+
+                    b.Property<decimal>("Rank");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Goods");
+                });
+
+            modelBuilder.Entity("moneygoes.Models.PurchasingGroup", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -275,11 +324,29 @@ namespace moneygoes.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("moneygoes.Models.PaymentItem", b =>
+            modelBuilder.Entity("moneygoes.Models.AppUser", b =>
                 {
-                    b.HasOne("moneygoes.Models.PaymentGroup", "Group")
-                        .WithMany("Items")
-                        .HasForeignKey("GroupId")
+                    b.HasOne("moneygoes.Models.PurchasingGroup")
+                        .WithMany("UsersInGroup")
+                        .HasForeignKey("PurchasingGroupID");
+                });
+
+            modelBuilder.Entity("moneygoes.Models.Comment", b =>
+                {
+                    b.HasOne("moneygoes.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
+                });
+
+            modelBuilder.Entity("moneygoes.Models.Purchase", b =>
+                {
+                    b.HasOne("moneygoes.Models.PurchasingGroup", "Group")
+                        .WithMany("Purchases")
+                        .HasForeignKey("GroupID");
+
+                    b.HasOne("moneygoes.Models.PurchaseObject", "Object")
+                        .WithMany()
+                        .HasForeignKey("PurchaseObjectId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

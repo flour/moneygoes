@@ -1,8 +1,8 @@
 using System;
 
-namespace moneygoes.Models
+namespace moneygoes.Models.DTOs
 {
-    public class PaymentItem : BaseEntity
+    public class PurchaseDto : BaseDto
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -11,9 +11,8 @@ namespace moneygoes.Models
         public bool Income { get; set; }
         public bool IsPlanned { get; set; }
         public bool Desired { get; set; }
-        public DateTime Created { get; set; } = DateTime.Now;
-
-        public int GroupId { get; set; }
-        public PaymentGroup Group { get; set; }
+        public DateTime Created { get; set; }
+        public AppUserDto User { get; set; }
+        public PurchaseObjectDto Object { get; set; }
     }
 }

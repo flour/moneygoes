@@ -20,8 +20,10 @@ namespace Name
         }
         private void InitMappers()
         {
-            Map<PaymentGroup, PaymentGroupDto, PaymentGroupVM>();
-            Map<PaymentItem, PaymentItemDto, PaymentItemVM>();
+            Map<PurchasingGroup, PurchasingGroupDto, PurchasingGroupVM>();
+            Map<Purchase, PurchaseDto, PurchaseVM>();
+            Map<PurchaseObject, PurchaseObjectDto, PurchaseObjectVM>();
+            Map<Comment, CommentDto, CommentVM>();
         }
 
         private void Map<E, D, V>()

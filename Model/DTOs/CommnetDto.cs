@@ -2,7 +2,7 @@ using System;
 
 namespace moneygoes.Models.DTOs
 {
-    public class PaymentItemDto : BaseDto
+    public class CommentDto : BaseDto
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -12,5 +12,6 @@ namespace moneygoes.Models.DTOs
         public bool IsPlanned { get; set; }
         public bool Desired { get; set; }
         public DateTime Created { get; set; }
+        public AppUserDto User { get; set; }
     }
 }

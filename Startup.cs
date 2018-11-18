@@ -38,7 +38,9 @@ namespace moneygoes
         public void ConfigureServices(IServiceCollection services)
         {
             var connString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING");
-            connString = string.IsNullOrWhiteSpace(connString) ? Configuration["DB:MySQL:ConnectionString"] : connString;
+            connString = string.IsNullOrWhiteSpace(connString)
+                ? Configuration["DB:MySQL:ConnectionString"]
+                : connString;
 
             services.AddCors();
             services.AddAutoMapper();

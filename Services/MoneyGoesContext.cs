@@ -7,8 +7,10 @@ namespace moneygoes.Services
 {
     public class MoneyGoesContext : IdentityDbContext<AppUser>
     {
-        public DbSet<PaymentGroup> Groups { get; set; }
-        public DbSet<PaymentItem> Items { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
+        public DbSet<PurchaseObject> Goods { get; set; }
+        public DbSet<PurchasingGroup> Groups { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         public MoneyGoesContext(DbContextOptions<MoneyGoesContext> options) : base(options)
         {

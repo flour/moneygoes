@@ -6,7 +6,7 @@ using moneygoes.Models;
 
 namespace moneygoes.Services.DB
 {
-    public interface IPaymentGroupRepo : IRepository<PaymentGroup>
+    public interface IPaymentGroupRepo : IRepository<PurchasingGroup>
     {
     }
 
@@ -18,19 +18,19 @@ namespace moneygoes.Services.DB
             _context = context;
         }
 
-        public async Task<PaymentGroup> AddItemAsync(PaymentGroup item)
+        public async Task<PurchasingGroup> AddItemAsync(PurchasingGroup item)
             => (await _context.Groups.AddAsync(item)).Entity;
 
-        public async Task<PaymentGroup> GetItemAsync(string id)
+        public async Task<PurchasingGroup> GetItemAsync(string id)
             => await _context.Groups.FindAsync(id);
 
-        public async Task<PaymentGroup> GetItemByIDAsync(int id)
+        public async Task<PurchasingGroup> GetItemByIDAsync(int id)
             => await _context.Groups.FindAsync(id);
 
-        public async Task<IEnumerable<PaymentGroup>> GetItemsAsync()
+        public async Task<IEnumerable<PurchasingGroup>> GetItemsAsync()
             => await _context.Groups.ToListAsync();
 
-        public Task RemoveItemAsync(PaymentGroup entity)
+        public Task RemoveItemAsync(PurchasingGroup entity)
         {
             _context.Groups.Remove(entity);
             return Task.CompletedTask;
@@ -45,7 +45,7 @@ namespace moneygoes.Services.DB
         public async Task<bool> SaveAsync()
             => await _context.SaveChangesAsync() >= 0;
 
-        public Task<PaymentGroup> UpdateItemAsync(PaymentGroup item)
+        public Task<PurchasingGroup> UpdateItemAsync(PurchasingGroup item)
         {
             var result = _context.Update(item).Entity;
             return Task.FromResult(result);
