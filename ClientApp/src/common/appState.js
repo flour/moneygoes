@@ -10,5 +10,5 @@ export const appState = {
     alert: alertState,
     registration: registrationState,
     user: userState,
-    payments: purchasesState,
+    purchases: purchasesState,
 }

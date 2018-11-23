@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { paymentActions, alertActions } from '../../actions';
 
-class GroupsPage extends React.Component {
+class PurchasesPage extends React.Component {
     constructor(props) {
         super(props);
-        const { payments, dispatch } = this.props;
-        this.state = { payments, name: '', description: '', submitted: false };
+        const { purchases, dispatch } = this.props;
+        this.state = { purchases, name: '', description: '', submitted: false };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         dispatch(paymentActions.getAllGroups())
@@ -30,10 +30,10 @@ class GroupsPage extends React.Component {
     }
 
     render() {
-        const { payments, name, description } = this.state;
+        const { purchases, name, description } = this.state;
         return (
             <div>
-                <h3>pAYMENTS?</h3>
+                <h3>Purchases?</h3>
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div>
                         <label htmlFor="groupName">Name</label>
@@ -45,8 +45,8 @@ class GroupsPage extends React.Component {
                     </div>
                     <button className="btn btn-primary">Add</button>
                 </form>
-                {payments.map((payment, i) => {
-                    return <div key={`group_${i}`}>{payment.name}</div>
+                {purchases.map((purchase, i) => {
+                    return <div key={`group_${i}`}>{purchase.name}</div>
                 })}
             </div>
         );
@@ -54,12 +54,12 @@ class GroupsPage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    const { payments, user } = state;
+    const { purchases, user } = state;
     return {
-        payments,
+        purchases,
         user
     };
 }
 
-const connectedGroupsPage = connect(mapStateToProps)(GroupsPage);
-export { connectedGroupsPage as GroupsPage }; 
+const connectedPurchasesPage = connect(mapStateToProps)(PurchasesPage);
+export { connectedPurchasesPage as PurchasesPage }; 

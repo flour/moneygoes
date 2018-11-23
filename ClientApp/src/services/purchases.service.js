@@ -4,7 +4,7 @@ export const purchasesService = {
     getAllPurchases: async () => {
         const requestOptions = { method: 'GET', headers: prepareHeaders(true, true) };
         try {
-            const response = await fetch(config.paymentsUrl, requestOptions);
+            const response = await fetch(config.purchasesUrl, requestOptions);
             const data = await handleResponse(response);
             if (data) {
                 localStorage.setItem('purchases', JSON.stringify(data));
@@ -23,10 +23,10 @@ export const purchasesService = {
             body: JSON.stringify({ name, description })
         };
         try {
-            const response = await fetch(config.paymentsUrl, requestOptions);
+            const response = await fetch(config.purchasesUrl, requestOptions);
             const data = await handleResponse(response);
             if (data) {
-                let allPayments = JSON.parse(localStorage.getItem('payments'));
+                let allPayments = JSON.parse(localStorage.getItem('purchases'));
                 allPayments = [data, ...allPayments];
                 localStorage.setItem('purchases', JSON.stringify(allPayments));
             }

@@ -6,7 +6,7 @@ const ACTION_HANDLERS = {
     [purchaseConstants.PURCHASE_CREATE_OK]: (state, action) => ([...(state || [])]),
 }
 
-export const purchase = (state = purchasesState, action) => {
+export const purchases = (state = purchasesState, action) => {
     const handler = ACTION_HANDLERS[action.type];
     return handler ? handler(state, action) : state;
 };

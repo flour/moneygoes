@@ -15,7 +15,7 @@ import {
   LoginPage,
   RegisterPage,
   ProfilePage,
-  GroupsPage
+  PurchasesPage
 } from './components/pages';
 
 class App extends React.Component {
@@ -39,7 +39,7 @@ class App extends React.Component {
             <Route path="/login" component={LoginPage} />
             <Route path="/register" component={RegisterPage} />
             <Route path="/profile" component={ProfilePage} />
-            <Route path="/data" component={GroupsPage} />
+            <Route path="/data" component={PurchasesPage} />
           </Layout>
         </Router>
       </div>
