@@ -17,25 +17,17 @@ namespace moneygoes.Controllers
     [Authorize]
     [Route("api/[controller]")]
     public class PurchasesController
-        : GenericController<PurchasingGroup, PurchasingGroupDto, PurchasingGroupVM, IPaymentGroupRepo>
+        : GenericController<Purchase, PurchaseDto, PurchaseVM, IPurchasesRepo>
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly IMapper _mapper;
 
         public PurchasesController(
             UserManager<AppUser> userManager,
             IMapper mapper,
-            IPaymentGroupRepo repository,
-            ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+            IPurchasesRepo repository,
+            ILoggerFactory loggerFactory) : base(repository, loggerFactory, mapper)
         {
             _userManager = userManager;
-            _mapper = mapper;
-        }
-
-        [HttpGet]
-        public override async Task<IActionResult> GetItems()
-        {
-            return Ok();
         }
     }
 }

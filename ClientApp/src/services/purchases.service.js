@@ -1,13 +1,13 @@
 import { prepareHeaders, handleResponse, handleError, config } from '../common';
 
-export const paymentService = {
-    getAllGroups: async () => {
+export const purchasesService = {
+    getAllPurchases: async () => {
         const requestOptions = { method: 'GET', headers: prepareHeaders(true, true) };
         try {
             const response = await fetch(config.paymentsUrl, requestOptions);
             const data = await handleResponse(response);
             if (data) {
-                localStorage.setItem('payments', JSON.stringify(data));
+                localStorage.setItem('purchases', JSON.stringify(data));
             }
             return data;
         }
@@ -16,7 +16,7 @@ export const paymentService = {
             throw error;
         }
     },
-    createGroup: async (name, description) => {
+    createPurchase: async (name, description) => {
         const requestOptions = {
             method: 'POST',
             headers: prepareHeaders(true, true),
@@ -28,7 +28,7 @@ export const paymentService = {
             if (data) {
                 let allPayments = JSON.parse(localStorage.getItem('payments'));
                 allPayments = [data, ...allPayments];
-                localStorage.setItem('payments', JSON.stringify(allPayments));
+                localStorage.setItem('purchases', JSON.stringify(allPayments));
             }
             return data;
         } catch (error) {

@@ -1,3 +1,3 @@
 export * from './alert.actions';
 export * from './user.actions';
-export * from './payment.actions';
+export * from './purchase.actions';

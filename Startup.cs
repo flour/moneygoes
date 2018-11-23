@@ -101,6 +101,7 @@ namespace moneygoes
 
         private void AddRepositories(IServiceCollection services)
         {
+            services.AddScoped<IPurchasesRepo, PurchasesRepo>();
             services.AddScoped<IPaymentGroupRepo, PaymentGroupRepo>();
         }
     }

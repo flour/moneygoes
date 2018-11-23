@@ -8,7 +8,7 @@ FOR /D %%p IN (".\bin\Release\netcoreapp2.1\publish\*.*") DO rmdir "%%p" /s /q
 
 dotnet clean --configuration Release
 dotnet publish -c Release
-copy Dockerfile .\bin\Release\netcoreapp2.1\publish\
+copy Dockerfile.build .\bin\Release\netcoreapp2.1\publish\Dockerfile
 cd .\bin\Release\netcoreapp2.1\publish\
 heroku container:login &&
 heroku container:push web -a %APP_NAME% &&

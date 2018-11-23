@@ -13,7 +13,7 @@ namespace moneygoes.Models
         public bool Desired { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
 
-        public int PurchaseObjectId { get; set; }
+        public int? PurchaseObjectId { get; set; }
         public PurchaseObject Object { get; set; }
 
         public PurchasingGroup Group { get; set; }

@@ -63,8 +63,9 @@ namespace moneygoes.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    var user = _userManager.Users.FirstOrDefault(u => u.Email == model.Email) as AppUser;
                     _logger.LogInformation(1, "User logged in.");
-                    return Ok(_mapper.Map<AppUserDto>(await _userManager.FindByEmailAsync(model.Email)));
+                    return Ok(_mapper.Map<AppUserDto>(user));
                 }
             }
             catch (System.Exception ex)

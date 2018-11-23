@@ -19,22 +19,32 @@ namespace moneygoes.Controllers
     {
         protected readonly R _repository;
         protected readonly string _;
+        protected readonly IMapper _mapper;
 
         private readonly ILogger _logger;
 
-        public GenericController(R repository, ILoggerFactory loggerFactory)
+        public GenericController(R repository, ILoggerFactory loggerFactory, IMapper mapper)
         {
             _repository = repository;
             _ = GetType().Name;
             _logger = loggerFactory.CreateLogger(_);
+            _mapper = mapper;
         }
 
         [HttpGet]
         public virtual async Task<IActionResult> GetItems()
         {
             var data = await _repository.GetItemsAsync();
-            var result = Mapper.Map<IEnumerable<D>>(data);
-            return Ok(result);
+            try
+            {
+                var result = _mapper.Map<IEnumerable<D>>(data);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+
         }
 
         [HttpGet("{id}")]
@@ -43,7 +53,7 @@ namespace moneygoes.Controllers
             var data = await _repository.GetItemByIDAsync(id);
             if (data == null)
                 return NotFound();
-            var result = Mapper.Map<D>(data);
+            var result = _mapper.Map<D>(data);
             return Ok(result);
         }
 
@@ -52,11 +62,11 @@ namespace moneygoes.Controllers
         {
             if (vm == null || !ModelState.IsValid)
                 return BadRequest();
-            var result = Mapper.Map<E>(vm);
+            var result = _mapper.Map<E>(vm);
             await _repository.AddItemAsync(result);
             if (!await _repository.SaveAsync())
                 return StatusCode(500, $"Could not create {_}'s record");
-            var resultDto = Mapper.Map<D>(result);
+            var resultDto = _mapper.Map<D>(result);
             return CreatedAtAction("GetItemByID", new { id = resultDto.ID }, resultDto);
         }
 
@@ -69,7 +79,7 @@ namespace moneygoes.Controllers
             var entity = await _repository.GetItemByIDAsync(id);
             if (entity == null)
                 return NotFound();
-            Mapper.Map(dto, entity);
+            _mapper.Map(dto, entity);
             if (!await _repository.SaveAsync())
                 return StatusCode(500, $"Could not update {_}'s record");
             return NoContent();
@@ -86,12 +96,12 @@ namespace moneygoes.Controllers
             if (entity == null)
                 return NotFound();
 
-            var dto = Mapper.Map<D>(entity);
+            var dto = _mapper.Map<D>(entity);
             patchDoc.ApplyTo(dto, ModelState);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            Mapper.Map(dto, entity);
+            _mapper.Map(dto, entity);
             if (!await _repository.SaveAsync())
                 return StatusCode(500, $"Could not patch {_}'s record");
             return NoContent();
