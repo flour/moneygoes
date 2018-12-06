@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using AutoMapper;
@@ -27,9 +28,15 @@ namespace moneygoes
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+                .SetBasePath(env.ContentRootPath);
+            if (File.Exists("appsettings.json"))
+            {
+                builder.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            }
+            if (File.Exists($"appsettings.{env.EnvironmentName}.json"))
+            {
+                builder.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: false, reloadOnChange: true);
+            }
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
