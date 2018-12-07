@@ -24,6 +24,7 @@ namespace moneygoes
 {
     public class Startup
     {
+        private const string CORS_POLICY = "TEST_POLICY";
         public IConfiguration Configuration { get; }
         public Startup(IHostingEnvironment env)
         {
@@ -49,7 +50,12 @@ namespace moneygoes
                 ? Configuration["DB:MySQL:ConnectionString"]
                 : connString;
 
-            services.AddCors();
+            services.AddCors(o => o.AddPolicy(CORS_POLICY, builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
             services.AddAutoMapper();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -77,11 +83,7 @@ namespace moneygoes
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials());
+            app.UseCors(CORS_POLICY);
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
