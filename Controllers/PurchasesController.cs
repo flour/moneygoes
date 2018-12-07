@@ -14,7 +14,6 @@ using moneygoes.Services.DB;
 
 namespace moneygoes.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     public class PurchasesController
         : GenericController<Purchase, PurchaseDto, PurchaseVM, IPurchasesRepo>
