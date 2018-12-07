@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,12 @@ namespace moneygoes.Services
         {
             try
             {
+                Database.EnsureCreated();
                 Database.Migrate();
             }
             catch (System.Exception ex)
             {
-                Debug.WriteLine(ex);
+                Console.WriteLine(ex);
             }
         }
     }
